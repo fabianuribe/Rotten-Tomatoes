@@ -12,6 +12,10 @@
 
 - (void)awakeFromNib {
     // Initialization code
+    
+    self.ratingLabel.layer.borderColor =[UIColor whiteColor].CGColor;
+    self.ratingLabel.layer.borderWidth =.8;
+    [self.ratingLabel sizeToFit];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

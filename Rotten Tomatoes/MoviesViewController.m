@@ -17,13 +17,12 @@
 @property (nonatomic, strong) NSArray *movies;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UIView *errorView;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 
 
 @end
 
 @implementation MoviesViewController
-
-
 
 
 - (void)viewDidLoad {
@@ -86,6 +85,7 @@
     
     cell.titleLabel.text = movie[@"title"];
     cell.synopsisLabel.text = movie[@"synopsis"];
+    cell.ratingLabel.text = movie[@"mpaa_rating"];
     
     [cell.thumbnail setImageWithURL:[NSURL URLWithString: [movie valueForKeyPath:@"posters.thumbnail"]]];
     
@@ -108,25 +108,20 @@
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
         
+        
         if(connectionError) {
             self.errorView.alpha = 1;
+
         } else {
             self.errorView.alpha = 0;
-            if(connectionError) {
-                self.errorView.alpha = 1;
-                
-            } else {
-                self.errorView.alpha = 0;
-                
-                NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-                
-                self.movies = responseDictionary[@"movies"];
-                
-                [self.tableView reloadData];
-            }
+            
+            NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+            self.movies = responseDictionary[@"movies"];
+            [self.tableView reloadData];
+            
         }
+        
         [self.refreshControl endRefreshing];
-
     }];
 }
 
